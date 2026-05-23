@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel Reviewer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M9 17H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v5" />
+      <polyline points="9 11 12 14 22 4" />
+      <path d="M16 19h6M19 16v6" />
+    </svg>
+    <h1>Excel Reviewer</h1>
+    <span>AI-powered Excel model audit</span>
+  </header>
+
+  <main>
+
+    <!-- VIEW: UPLOAD -->
+    <div id="view-upload" class="view active">
+
+      <!-- API Key input -->
+      <div class="api-key-bar">
+        <label for="api-key-input">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+          </svg>
+          Anthropic API key
+        </label>
+        <input type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off" />
+        <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener" class="key-link">Get a free key ↗</a>
+      </div>
+      <p class="key-note">Your key is sent only to this server to run the analysis. It is never stored or logged.</p>
+
+      <div class="upload-card" id="drop-zone">
+        <div class="upload-icon">📊</div>
+        <h2>Upload your Excel model</h2>
+        <p>Drop an .xlsx or .xlsm file here, or click to browse.<br>Max 10 MB.</p>
+        <button class="btn-primary" id="browse-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          Choose file
+        </button>
+        <input type="file" id="file-input" accept=".xlsx,.xlsm" />
+        <p class="file-note">Detects: circular refs · formula errors · nested IFs · VLOOKUP · redundant tab links</p>
+      </div>
+      <div id="upload-error" class="error-banner" style="display:none"></div>
+    </div>
+
+    <!-- VIEW: ANALYZING -->
+    <div id="view-analyzing" class="view">
+      <div class="analyzing-card">
+        <div class="spinner"></div>
+        <h2>Analysing your workbook…</h2>
+        <p id="progress-msg">Starting up…</p>
+        <div class="filename-tag" id="analyzing-filename"></div>
+      </div>
+    </div>
+
+    <!-- VIEW: RESULTS -->
+    <div id="view-results" class="view">
+
+      <div class="results-header">
+        <h2 id="results-title">Review complete</h2>
+        <div class="stat-pills" id="stat-pills"></div>
+      </div>
+
+      <div id="partial-notice" class="partial-notice" style="display:none">
+        ⚠ Analysis hit the iteration limit — results may be incomplete. Review the queue carefully before applying.
+      </div>
+
+      <div class="summary-box" id="summary-box"></div>
+
+      <!-- Auto-fixes panel -->
+      <div class="section" id="autofix-section" style="display:none">
+        <div class="section-title">Auto-fixed (applied automatically)</div>
+        <div class="autofix-list" id="autofix-list"></div>
+      </div>
+
+      <!-- Validation queue -->
+      <div class="section" id="validation-section" style="display:none">
+        <div class="section-title">Requires your review</div>
+        <div id="validation-list"></div>
+      </div>
+
+      <!-- Apply bar -->
+      <div class="apply-bar" id="apply-bar">
+        <div class="apply-progress">
+          <strong id="decisions-count">0 / 0</strong> decisions made
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-primary" id="approve-all-btn" style="background:#16a34a">
+            Approve all
+          </button>
+          <button class="btn-primary" id="apply-btn" disabled>
+            Apply &amp; Download
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
